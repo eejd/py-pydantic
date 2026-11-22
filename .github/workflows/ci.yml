@@ -23,9 +23,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14', '3.15']
+        python-version: ['3.11', '3.12', '3.13', '3.14', '3.15']
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -55,7 +55,7 @@ jobs:
       id-token: write
       attestations: write
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -73,7 +73,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           subject-path: pydantic-core/dist/*
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pydantic_core_pypi_files_sdist
           path: pydantic-core/dist
@@ -102,19 +102,19 @@ jobs:
           - os: linux
             manylinux: auto
             target: armv7
-            interpreter: 3.10 3.11 3.12 3.13 3.14 3.14t 3.15 3.15t
+            interpreter: 3.11 3.12 3.13 3.14 3.14t 3.15 3.15t
           - os: linux
             manylinux: auto
             target: ppc64le
-            interpreter: 3.10 3.11 3.12 3.13 3.14 3.14t 3.15 3.15t
+            interpreter: 3.11 3.12 3.13 3.14 3.14t 3.15 3.15t
           - os: linux
             manylinux: auto
             target: riscv64gc-unknown-linux-gnu
-            interpreter: 3.10 3.11 3.12 3.13 3.14 3.14t 3.15 3.15t
+            interpreter: 3.11 3.12 3.13 3.14 3.14t 3.15 3.15t
           - os: linux
             manylinux: auto
             target: s390x
-            interpreter: 3.10 3.11 3.12 3.13 3.14 3.14t 3.15 3.15t
+            interpreter: 3.11 3.12 3.13 3.14 3.14t 3.15 3.15t
             # manylinux pypy and graalpy on major architectures:
           - os: linux
             manylinux: auto
@@ -134,13 +134,13 @@ jobs:
 
           # musllinux
           - os: linux
-            manylinux: musllinux_1_1
+            manylinux: musllinux_1_2
             target: x86_64
           - os: linux
-            manylinux: musllinux_1_1
+            manylinux: musllinux_1_2
             target: aarch64
           - os: linux
-            manylinux: musllinux_1_1
+            manylinux: musllinux_1_2
             target: armv7
 
           # macos;
@@ -148,7 +148,7 @@ jobs:
           # arm pypy and older pythons which can't be run on the arm hardware for PGO
           - os: macos
             target: x86_64
-            interpreter: 3.10 3.11 3.12 3.13 3.14 3.14t 3.15 3.15t pypy3.11 graalpy3.12
+            interpreter: 3.11 3.12 3.13 3.14 3.14t 3.15 3.15t pypy3.11 graalpy3.12
           - os: macos
             target: aarch64
             interpreter: pypy3.11 graalpy3.12 graalpy3.13
@@ -172,7 +172,7 @@ jobs:
           - os: windows
             target: i686
             python-architecture: x86
-            interpreter: 3.10 3.11 3.12 3.13 3.14 3.14t 3.15 3.15t
+            interpreter: 3.11 3.12 3.13 3.14 3.14t 3.15 3.15t
           - os: windows
             target: aarch64
             runs-on: windows-11-arm
@@ -185,7 +185,7 @@ jobs:
     # Running on 24.04 until https://github.com/PyO3/maturin-action/issues/484 / https://github.com/actions/runner-images/issues/14790 is fixed:
     runs-on: ${{ matrix.runs-on || (matrix.os == 'linux' && 'ubuntu-24.04') || format('{0}-latest', matrix.os) }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -221,7 +221,7 @@ jobs:
           maturin-version: v1.16.0
           target: ${{ matrix.target }}
           manylinux: ${{ matrix.manylinux }}
-          args: --release --out dist --interpreter ${{ steps.pypy-pp80.outputs.interpreter || matrix.interpreter-path || matrix.interpreter || '3.10 3.11 3.12 3.13 3.14 3.14t 3.15 3.15t pypy3.11' }}
+          args: --release --locked --out dist --interpreter ${{ steps.pypy-pp80.outputs.interpreter || matrix.interpreter-path || matrix.interpreter || '3.11 3.12 3.13 3.14 3.14t 3.15 3.15t pypy3.11' }}
           rust-toolchain: stable
           docker-options: -e CI
 
@@ -235,7 +235,7 @@ jobs:
         with:
           subject-path: pydantic-core/dist/*
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pydantic_core_pypi_files_${{ matrix.os }}_${{ matrix.target }}_${{ matrix.interpreter || 'all' }}_${{ matrix.manylinux }}
           path: pydantic-core/dist
@@ -261,11 +261,11 @@ jobs:
             runs-on: windows-latest
           - os: macos
             runs-on: macos-latest
-        interpreter: ['3.10', '3.11', '3.12', '3.13', '3.14', '3.14t', '3.15', '3.15t']
+        interpreter: ['3.11', '3.12', '3.13', '3.14', '3.14t', '3.15', '3.15t']
 
     runs-on: ${{ matrix.platform.runs-on }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -301,7 +301,7 @@ jobs:
         with:
           subject-path: pydantic-core/dist/*
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pydantic_core_pypi_files_${{ matrix.platform.os }}_${{ matrix.interpreter }}
           path: pydantic-core/dist
@@ -325,7 +325,7 @@ jobs:
           - python-version: '3.14'
             pyodide-version: '314.0.7'
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -366,7 +366,7 @@ jobs:
           # Keep in sync with `build-system.requires` in `pydantic-core/pyproject.toml`:
           maturin-version: v1.16.0
           target: wasm32-unknown-emscripten
-          args: --release --out dist --interpreter ${{ matrix.python-version }}
+          args: --release --locked --out dist --interpreter ${{ matrix.python-version }}
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }} # zizmor: ignore[cache-poisoning]
           rust-toolchain: ${{ steps.pyodide-config.outputs.rust-toolchain }}
 
@@ -378,7 +378,7 @@ jobs:
         with:
           subject-path: pydantic-core/dist/*
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pydantic_core_pypi_files_pyemscripten_${{ matrix.python-version }}
           path: pydantic-core/dist
@@ -388,7 +388,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -421,7 +421,7 @@ jobs:
             distro: alpine_latest
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -497,7 +497,7 @@ jobs:
 
     runs-on: ${{ matrix.platform.runs-on }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -534,7 +534,7 @@ jobs:
 
     runs-on: ${{ matrix.os }}-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -615,7 +615,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -661,7 +661,7 @@ jobs:
           - 'pypy3.11'
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -702,7 +702,7 @@ jobs:
           - '3.14+debug'
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -743,7 +743,7 @@ jobs:
             pylock-suffix: '314'
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -782,7 +782,7 @@ jobs:
       pydantic-version: ${{ steps.check-tag.outputs.VERSION }}
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -799,7 +799,8 @@ jobs:
           version_file_path: pydantic/version.py
 
       - name: Build pydantic library
-        run: uv run --no-sync python -m build --installer uv
+        # Regenerate build constraints with `make build-constraints`:
+        run: uv run --no-sync python -m build --installer uv --dependency-constraints-txt .github/build-constraints.txt
 
       - run: ls -lh dist/
 
@@ -807,7 +808,7 @@ jobs:
         with:
           subject-path: dist/*
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pydantic_pypi_files
           path: dist
@@ -815,7 +816,7 @@ jobs:
   docs-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -845,7 +846,7 @@ jobs:
     name: Test memray
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -866,7 +867,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14', '3.15', '3.15t', 'pypy3.11']
+        python-version: ['3.11', '3.12', '3.13', '3.14', '3.15', '3.15t', 'pypy3.11']
         include:
           # test macos intel just with latest python version
           - os: macos-15-intel
@@ -882,7 +883,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -912,7 +913,7 @@ jobs:
 
       - name: Store coverage files
         if: '!startsWith(matrix.python-version, ''pypy'')'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: coverage-${{ matrix.os }}-${{ matrix.python-version }}
           path: coverage
@@ -922,7 +923,7 @@ jobs:
     name: Test Pydantic plugin
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -945,7 +946,7 @@ jobs:
     name: Mypy typechecking tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -966,7 +967,7 @@ jobs:
           CONTEXT: linux-mypy
 
       - name: Store coverage files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: coverage-mypy
           path: coverage
@@ -976,7 +977,7 @@ jobs:
     name: Typechecking integration tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -1007,7 +1008,7 @@ jobs:
       UV_NO_SYNC: '1'
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -1031,14 +1032,14 @@ jobs:
       - run: uv run coverage html --show-contexts --title "pydantic coverage for ${{ github.sha }}"
 
       - name: Store coverage data
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: coverage-data
           path: .coverage
           include-hidden-files: true
 
       - name: Store coverage HTML
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: coverage-html
           path: htmlcov
@@ -1052,7 +1053,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -1063,12 +1064,12 @@ jobs:
 
       - name: Generate coverage comment
         id: coverage-comment
-        uses: py-cov-action/python-coverage-comment-action@54b4ecbc0fcf4c22e54be4dd59d4c08db9953ce9 # v4.4
+        uses: py-cov-action/python-coverage-comment-action@e5fb2218463c3377f3504b0c5b5646ed53da7a2f # v4.5
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Store coverage comment
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: steps.coverage-comment.outputs.COMMENT_FILE_WRITTEN == 'true'
         with:
           name: python-coverage-comment-action
@@ -1080,9 +1081,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14', '3.15']
+        python-version: ['3.11', '3.12', '3.13', '3.14', '3.15']
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -1149,7 +1150,7 @@ jobs:
       attestations: read
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -1225,7 +1226,7 @@ jobs:
       attestations: read
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -1260,7 +1261,7 @@ jobs:
           uv run --no-sync twine check --strict pydantic-dist/*
 
       - name: Upload package to PyPI
-        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
         with:
           packages-dir: pydantic-dist/
 
