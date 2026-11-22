@@ -195,6 +195,7 @@ class FieldInfo(_repr.Representation):
         '_original_assignment',
         '_original_annotation',
         '_final',
+        '_default_factory_takes_validated_data_cache',
     )
 
     # used to convert kwargs to metadata/constraints,
@@ -288,6 +289,7 @@ class FieldInfo(_repr.Representation):
         else:
             attributes_set['default_factory'] = default_factory
         self.default_factory = default_factory
+        self._default_factory_takes_validated_data_cache = None
 
         if default is not PydanticUndefined and default_factory is not None:
             raise TypeError('cannot specify both default and default_factory')
@@ -887,8 +889,15 @@ class FieldInfo(_repr.Representation):
 
         Returns `None` if no default factory is set.
         """
-        if self.default_factory is not None:
-            return _fields.takes_validated_data_argument(self.default_factory)
+        factory = self.default_factory
+        if factory is None:
+            return None
+        cached = self._default_factory_takes_validated_data_cache
+        if cached is not None and cached[0] is factory:
+            return cached[1]
+        value = _fields.takes_validated_data_argument(factory)
+        self._default_factory_takes_validated_data_cache = (factory, value)
+        return value
 
     @overload
     def get_default(
@@ -1024,6 +1033,7 @@ class FieldInfo(_repr.Representation):
                 '_original_assignment',
                 '_original_annotation',
                 '_final',
+                '_default_factory_takes_validated_data_cache',
             ):
                 continue
             elif s == 'metadata' and not self.metadata:
